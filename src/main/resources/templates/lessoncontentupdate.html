@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Bootstrap, from Twitter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+
+    <!-- Le styles -->
+    <link href="/css/bootstrap.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+
+        @media (max-width: 980px) {
+            /* Enable use of floated navbar text */
+            .navbar-text.pull-right {
+                float: none;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+    </style>
+    <link href="/css/bootstrap-responsive.css" rel="stylesheet"/>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/ico/apple-touch-icon-144-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/ico/apple-touch-icon-114-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/ico/apple-touch-icon-72-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" href="/ico/apple-touch-icon-57-precomposed.png"/>
+    <link rel="shortcut icon" href="/ico/favicon.png"/>
+</head>
+
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="#">Project name</a>
+            <div class="nav-collapse collapse">
+                <p class="navbar-text pull-right">
+                    Logged in as <span th:text="${session.username}">Username</span>
+                </p>
+                <ul class="nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span3">
+            <div class="well sidebar-nav">
+                <ul class="nav nav-list">
+                    <li class="nav-header">培训管理</li>
+                    <li class="active"><a href="/trainsearch">培训检索</a></li>
+                    <li><a href="/traindetails">培训明细</a></li>
+                    <li><a href="#">Link</a></li>
+                    <li><a href="#">Link</a></li>
+                    <li class="nav-header">Sidebar</li>
+                    <li><a href="#">Link</a></li>
+                    <li><a href="#">Link</a></li>
+                    <li><a href="#">Link</a></li>
+                    <li><a href="#">Link</a></li>
+                    <li><a href="#">Link</a></li>
+                    <li><a href="#">Link</a></li>
+                    <li class="nav-header">Sidebar</li>
+                    <li><a href="#">Link</a></li>
+                    <li><a href="#">Link</a></li>
+                    <li><a href="#">Link</a></li>
+                </ul>
+            </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+            <span>培训管理/课程内容更新</span><br/><br/>
+            <form name="form" method="post" action="/train/lesson/submit">
+                <span>课程目的：&nbsp;</span><textarea class="form-control" rows="2" th:text="${session.trainInfo.goal}"></textarea><br/>
+                <span>课程大纲：&nbsp;</span><textarea class="form-control" rows="3" th:text="${session.trainInfo.description}"></textarea><br/><br/>
+                <div class="form-actions" th:if="${session.trainInfo.status} eq '0'">
+                    <button type="button" class="btn" id="lessonAppend" onclick="lessonContentAppend();">追加</button>&nbsp;
+                    <button type="button" class="btn" onclick="lessonContentDelete();">删除</button>
+                </div>
+                <table class="table table-condensed" id="lessonTable" th:if="${not #lists.isEmpty(session.maps)}">
+                    <thead>
+                        <tr id="lessonTr">
+                            <th width="5%" th:if="${session.trainInfo.status} eq '0'">#</th>
+                            <th width="20%">日期</th>
+                            <th width="30%">时间</th>
+                            <th width="45%">内容</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="map : ${session.maps}">
+                            <td th:if="${session.trainInfo.status} eq '0'"><div class="checkbox">
+                                <label>
+                                    <input type="checkbox" class="lessonCheckbox" name="checkbox" th:id="${map.key.lessonId}" value="option1" aria-label="Checkbox without label text"/>
+                                </label>
+                            </div></td>
+                            <td><input type="text" th:value="*{map.key.dateNum}" id="dateNum" name="dateNum"/></td>
+                            <td><input type="text" th:value="*{map.value}" id="timeFromTo" name="timeFromTo"/></td>
+                            <td><input type="text" th:value="*{map.key.description}" id="description" name="description"/></td>
+                        </tr>
+                    </tbody>
+
+                </table>
+                <button type="submit" class="btn btn-primary" th:if="${session.trainInfo.status} eq '0'">登录</button>&nbsp;
+                <button type="button" class="btn" onclick="location.href = '/trainsearch'">返回</button>
+            </form>
+        </div><!--/span-->
+    </div><!--/row-->
+
+    <hr/>
+
+    <footer>
+        <p>&copy; Company 2020</p>
+    </footer>
+
+</div><!--/.fluid-container-->
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap-transition.js"></script>
+<script src="/js/bootstrap-alert.js"></script>
+<script src="/js/bootstrap-modal.js"></script>
+<script src="/js/bootstrap-dropdown.js"></script>
+<script src="/js/bootstrap-scrollspy.js"></script>
+<script src="/js/bootstrap-tab.js"></script>
+<script src="/js/bootstrap-tooltip.js"></script>
+<script src="/js/bootstrap-popover.js"></script>
+<script src="/js/bootstrap-button.js"></script>
+<script src="/js/bootstrap-collapse.js"></script>
+<script src="/js/bootstrap-carousel.js"></script>
+<script src="/js/bootstrap-typeahead.js"></script>
+
+<!--<script>-->
+<!--    function lessonAppend() {-->
+<!--        $("#lessonTr").append("<tr class='checkTr'>" +-->
+<!--            "                        <td><div class='checkbox'>" +-->
+<!--            "                            <label>" +-->
+<!--            "                                <input type='checkbox' class='lessonCheckbox' id='checkTr' value='option1' aria-label='Checkbox without label text'/>" +-->
+<!--            "                            </label>" +-->
+<!--            "                        </div></td>" +-->
+<!--            "                        <td><input type='text'/></td>" +-->
+<!--            "                        <td><input type='text'/></td>" +-->
+<!--            "                        <td><input type='text'/></td>" +-->
+<!--            "                    </tr>");-->
+<!--    }-->
+
+<!--    function lessonDelete() {-->
+<!--        var trLength = $('tr').length-1;-->
+<!--        for(var i=0;trLength>i;i++){-->
+<!--            // if($('.tableText')[i].getAttribute('value').length>1){-->
+<!--            //     $('.tableText')[i].value='0';-->
+<!--            // }-->
+<!--            if ($(".lessonCheckbox")[i].prop("checked") == true){-->
+<!--                $(".lessonCheckbox")[i].parent().parent().remove();-->
+<!--                var lessonId = $(".lessonCheckbox")[i].prop("id");-->
+<!--                $.post("/train/lesson/delete",{"lessonId":lessonId},function (data) {},"json");-->
+<!--            }-->
+<!--        }-->
+
+<!--    }-->
+<!--</script>-->
+<script>
+    function lessonContentAppend() {
+        // $("#lessonTr").append("<tr>" +
+        //     "<td><div class='checkbox'>" +
+        //     "<label>" +
+        //     "<input type='checkbox' class='lessonCheckbox' id='checkTr' value='option1' aria-label='Checkbox without label text'/>" +
+        //     "</label>" +
+        //     "</div>" +
+        //     "</td>" +
+        //     "<td><input type='text'/></td>" +
+        //     "<td><input type='text'/></td>" +
+        //     "<td><input type='text'/></td>" +
+        //     "</tr>");
+
+        var result='';
+        result +='<tr>';
+        result +='<td><div class="checkbox">';
+        result +='<label>';
+        result +='<input type="checkbox" name="checkbox" class="lessonCheckbox" id="checkTr" value="option1" aria-label="Checkbox without label text"/>';
+        result +='</label>';
+        result +='</div>';
+        result +='</td>';
+        result +='<td><input type="text" id="dateNum" name="dateNum"/></td>';
+        result +='<td><input type="text" id="timeFromTo" name="timeFromTo"/></td>';
+        result +='<td><input type="text" id="description" name="description"/></td>';
+        result +='</tr>';
+        $("#lessonTable tbody").after(result);
+    }
+
+    // $("#lessonAppend").click(function () {
+    //     $("#lessonTr").append("<tr class='checkTr'>" +
+    //         "                        <td><div class='checkbox'>" +
+    //         "                            <label>" +
+    //         "                                <input type='checkbox' class='lessonCheckbox' id='checkTr' value='option1' aria-label='Checkbox without label text'/>" +
+    //         "                            </label>" +
+    //         "                        </div></td>" +
+    //         "                        <td><input type='text'/></td>" +
+    //         "                        <td><input type='text'/></td>" +
+    //         "                        <td><input type='text'/></td>" +
+    //         "                    </tr>");
+    // })
+
+    function lessonContentDelete() {
+        // var trLength = $('tr').length-1;
+        // for(var i=0;trLength>i;i++){
+        //     // if($('.tableText')[i].getAttribute('value').length>1){
+        //     //     $('.tableText')[i].value='0';
+        //     // }
+        //     if ($('.lessonCheckbox')[i].prop('checked') == true){
+        //         $('.lessonCheckbox')[i].parent().parent().remove();
+        //         var lessonId = $(".lessonCheckbox")[i].prop('id');
+        //         $.post('/train/lesson/delete',{'lessonId':lessonId},function (data) {},'json');
+        //     }
+        // }
+
+        $('input[name="checkbox"]:checked').each(function(){
+            var lessonId = this.id;
+            $.post('/train/lesson/delete',{'lessonId':lessonId},function (data) {},'json');
+            $(this).parent().parent().parent().parent().remove();//移除当前行 checkbox的父级是td，td的父级是tr，然后删除tr。就ok了。用each，选择多行遍历删除
+        });
+
+    }
+
+    // function trainLessonSubmit() {
+    //     var trLength = $('tr').length-1;
+    //     for(var i=0;trLength>i;i++){
+    //         // if($('.tableText')[i].getAttribute('value').length>1){
+    //         //     $('.tableText')[i].value='0';
+    //         // }
+    //         var jso = [];
+    //         var dateNum = document.getElementById("dateNum")[i].value;
+    //         var timeFromTo = document.getElementById("timeFromTo")[i].value;
+    //         var description = document.getElementById("description")[i].value;
+    //         var row = {"dateNum":dateNum,"timeFromTo":timeFromTo,"description":description};
+    //         jso.push(row);
+    //         $.post("/train/lesson/submit",{"jso":jso},function () {},"json");
+    //     }
+    // }
+</script>
+</body>
+</html>
